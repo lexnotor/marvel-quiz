@@ -332,6 +332,8 @@ footer {
   margin: 0 auto 20px;
   min-width: 150px;
   background-color: transparent;
+  background-color: var(--red-color);
+  border: 1px solid var(--red-color);
   color: var(--white-color);
   padding: 7px;
   font-size: 15px;
@@ -339,7 +341,7 @@ footer {
 }
 
 .formContent button:hover {
-  background-color: var(--red-color);
+  background-color: var(--dark-red-color);
   color: var(--white-color);
   cursor: pointer;
 }

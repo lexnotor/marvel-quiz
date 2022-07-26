@@ -32,31 +32,16 @@ class Firebase extends Component {
     // Defifinition de differente fonctions d'authentification
 
     // l'inscription
-    signupUser(email, password) {
+    signupUser = (email, password) =>
         createUserWithEmailAndPassword(this.auth, email, password)
-            .then((userCredential) => {
-                this.user = userCredential.user;
-            })
-            .catch((error) => {
-
-            })
-    }
 
     // la connexion
-    loginUser(email, password) {
-        signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                this.user = userCredential.user;
-            })
-            .catch((error) => {
-                
-            })
-    }
+    loginUser = (email, password) =>
+        signInWithEmailAndPassword(this.auth, email, password)
 
     // la deconnexion
-    logoutUser() {
+    logoutUser = () => 
         this.auth.signOut();
-    }
 
     render() {
         return (
