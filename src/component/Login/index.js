@@ -62,7 +62,8 @@ function Login() {
               <button disabled={!btn}>Connexion</button>
             </form>
             <div className="linkContainer">
-              <Link to='/signup' className='simpleLink'>Nouveau sur Marvel Quiz ? Inscrivez-vous maintenant</Link>
+              <Link to='/signup' className='simpleLink'>Nouveau sur Marvel Quiz ? Inscrivez-vous maintenant</Link><br />
+              <Link to='/forgetpassword' className='simpleLink'>Mot de passe oublié ? récupérez le ici</Link>
             </div>
           </div>
         </div>

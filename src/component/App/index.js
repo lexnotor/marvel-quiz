@@ -6,6 +6,7 @@ import Footer from "../Footer"
 import Welcome from '../Welcome';
 import Signup from '../Signup';
 import Login from '../Login';
+import ForgetPassword from "../ForgetPassword";
 import ErrorPage from '../ErrorPage';
 import '../../App.css';
 
@@ -18,6 +19,7 @@ function App() {
         <Route element={<Welcome />} path="/welcome" />
         <Route element={<Signup />} path="/signup" />
         <Route element={<Login />} path="/login" />
+        <Route element={<ForgetPassword />} path="/forgetpassword" />
         <Route element={<ErrorPage />} path="*" />
       </Routes>
 

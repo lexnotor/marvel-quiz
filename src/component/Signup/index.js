@@ -1,6 +1,7 @@
+import { setDoc, getDoc } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FirebaseContext } from '../Firebase';
+import Firebase, { FirebaseContext } from '../Firebase';
 
 function Signup() {
 
@@ -37,14 +38,18 @@ function Signup() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const { email, password } = loginData;
+    const { email, password, pseudo } = loginData;
     firebase.signupUser(email, password)
-      .then(user => {
-        // setLoginData(data)
+      .then((authUser) => {
+        const docRef = firebase.user(authUser.user.uid);
+        setDoc(docRef, {pseudo, email})
+      })
+      .then(() => {
         navigate('/welcome');
       })
       .catch(error => {
         setError(error.message);
+        console.log(error)
       });
   }
 
