@@ -38,6 +38,17 @@ class Quiz extends Component {
         }
     }
 
+    nextQuestion = () => {
+        if(this.state.idQuestion > this.state.maxQuestion-1) {
+            // End
+        } else {
+            this.setState(prevState => ({
+                idQuestion: prevState.idQuestion + 1
+            }))
+        }
+        
+    }
+
     optionHandle(option) {
         this.setState({
             currentAnswer: option
@@ -61,7 +72,10 @@ class Quiz extends Component {
                 
                 { diplayOptions }
 
-                <button className='btnSubmit' disabled={this.state.currentAnswer===''}>Suivant</button>
+                <button 
+                className='btnSubmit'
+                disabled={this.state.currentAnswer===''}
+                onClick={this.nextQuestion}>Suivant</button>
             </div>
         )
     }
