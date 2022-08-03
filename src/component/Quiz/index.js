@@ -11,7 +11,8 @@ class Quiz extends Component {
         maxQuestion: 10,
         question: '',
         options: [],
-        idQuestion: 0
+        idQuestion: 0,
+        currentAnswer: ''
     }
 
     loadQuestion = level => {
@@ -37,11 +38,19 @@ class Quiz extends Component {
         }
     }
 
+    optionHandle(option) {
+        this.setState({
+            currentAnswer: option
+        })
+    }
+
     render() {
         // const { pseudo } = this.props.userData;
         const diplayOptions= this.state.options.map((option, index) => {
             return (
-                <p key={index} className='answerOptions'>{ option }</p>
+                <p key={index} 
+                    className={`answerOptions ${this.state.currentAnswer === option ? 'selected': null}`}
+                 onClick={() => this.optionHandle(option)}>{ option }</p>
             )
         });
         return (
@@ -52,7 +61,7 @@ class Quiz extends Component {
                 
                 { diplayOptions }
 
-                <button className='btnSubmit'>Suivant</button>
+                <button className='btnSubmit' disabled={this.state.currentAnswer===''}>Suivant</button>
             </div>
         )
     }
