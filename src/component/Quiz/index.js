@@ -12,12 +12,16 @@ class Quiz extends Component {
         question: '',
         options: [],
         idQuestion: 0,
-        currentAnswer: ''
+        currentAnswer: '',
+        score: 0
     }
 
+    storedDataRef = React.createRef()
+
     loadQuestion = level => {
-        const questionRequested = QuizMarvel[0].quizz['debutant']
+        const questionRequested = QuizMarvel[0].quizz[level]
         if(questionRequested.length <= this.state.maxQuestion) {
+            this.storedDataRef.current = questionRequested;
             const toStore = questionRequested.map(({ answer, ...toKeep}) => toKeep);
             this.setState({storedQuestion: toStore})
         } else {
@@ -36,6 +40,14 @@ class Quiz extends Component {
                 options: this.state.storedQuestion[this.state.idQuestion].options
             });
         }
+
+        if(prevState.idQuestion !== this.state.idQuestion) {
+            this.setState({
+                question: this.state.storedQuestion[this.state.idQuestion].question,
+                options: this.state.storedQuestion[this.state.idQuestion].options,
+                currentAnswer: ''
+            });
+        }
     }
 
     nextQuestion = () => {
@@ -46,7 +58,13 @@ class Quiz extends Component {
                 idQuestion: prevState.idQuestion + 1
             }))
         }
-        
+
+        const theAnswer = this.storedDataRef.current[this.state.idQuestion].answer
+        if(theAnswer === this.state.currentAnswer) {
+            this.setState(prevState => ({
+                score: prevState.score + 1
+            }))
+        }
     }
 
     optionHandle(option) {
