@@ -2,7 +2,7 @@ import React, { forwardRef, Fragment, useEffect, useState } from 'react'
 
 const QuizOver = forwardRef((props, ref) => {
 
-  const {percentage, levelQuiz, levelName, maxQuestions, score} = props;
+  const { percentage, levelQuiz, levelName, maxQuestions, score, loadLevelQuestion } = props;
 
   const [asked, setAsked] = useState([]);
 
@@ -21,14 +21,24 @@ const QuizOver = forwardRef((props, ref) => {
             (
               <>
                   <p className='successMsg'>Bravo, passez au niveau suivant</p>
-                  <button className='btnResult success'>Niveau Suivant</button>
+                  <button 
+                    className='btnResult success'
+                    onClick={() => loadLevelQuestion(levelQuiz)}
+                  >
+                    Niveau Suivant
+                  </button>
               </>
             )
             :
             (
               <>
                   <p className='successMsg'>Bravo, vous êtes un expert</p>
-                  <button className='btnResult gameOver'>Accueil</button>
+                  <button 
+                    className='btnResult gameOver'
+                    onClick={() => loadLevelQuestion(0)}
+                  >
+                    Accueil
+                  </button>
               </>
               
             )
@@ -45,7 +55,12 @@ const QuizOver = forwardRef((props, ref) => {
       <Fragment>
         <div className='stepsBtnContainer'>
           <p className='successMsg'>Vous avez échoué</p>
-          <button className='btnResult success'>Recommencer</button>
+          <button 
+            className='btnResult success'
+            onClick={() => loadLevelQuestion(levelQuiz)}
+          >
+            Recommencer
+          </button>
         </div>
         <div className="percentage">
           <div className="progressPercent">Réussite: {percentage}%</div>
@@ -97,4 +112,4 @@ const QuizOver = forwardRef((props, ref) => {
 })
 
 
-export default QuizOver
+export default React.memo(QuizOver)
