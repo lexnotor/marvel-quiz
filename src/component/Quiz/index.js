@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 import { QuizMarvel } from '../quizMarvel';
 import Levels from '../Levels'
 import ProgressBar from '../ProgressBar';
@@ -13,7 +15,8 @@ class Quiz extends Component {
         options: [],
         idQuestion: 0,
         currentAnswer: '',
-        score: 0
+        score: 0,
+        showWelcomeMsg: true
     }
 
     storedDataRef = React.createRef()
@@ -27,6 +30,21 @@ class Quiz extends Component {
         } else {
             console.error('Pas assez de questions')
         }
+    }
+
+    showWelcomeMsg = pseudo => {
+        if(this.state.showWelcomeMsg) {
+            this.setState({ showWelcomeMsg: false })
+            toast.warn(`Bienvenue à toi ${pseudo}`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+            });
+        }
+        
     }
 
     componentDidMount() {
@@ -48,6 +66,9 @@ class Quiz extends Component {
                 currentAnswer: ''
             });
         }
+        if (this.props.userData.pseudo) {
+            this.showWelcomeMsg(this.props.userData.pseudo);
+        }
     }
 
     nextQuestion = () => {
@@ -63,7 +84,24 @@ class Quiz extends Component {
         if(theAnswer === this.state.currentAnswer) {
             this.setState(prevState => ({
                 score: prevState.score + 1
-            }))
+            }));
+            toast.success(`Félicitations ! +1`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+            });
+        } else {
+            toast.error(`Félicitations ! +1`, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+            });
         }
     }
 
@@ -86,6 +124,7 @@ class Quiz extends Component {
             <div >
                 <Levels />
                 <ProgressBar />
+                <ToastContainer />
                 <h2>{ this.state.question}</h2>
                 
                 { diplayOptions }
