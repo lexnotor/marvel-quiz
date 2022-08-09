@@ -2,22 +2,61 @@ import React, { forwardRef, Fragment, useEffect, useState } from 'react'
 
 const QuizOver = forwardRef((props, ref) => {
 
+  const {percentage, levelQuiz, levelName, maxQuestions, score} = props;
+
   const [asked, setAsked] = useState([]);
+
+  const canPass = percentage >= 50;
 
   useEffect(() => {
     setAsked(ref.current)
   }, [ref])
 
+  const decision = canPass ? 
+    (
+      <Fragment>
+        <div className='stepsBtnContainer'>
+          {
+            levelQuiz < levelName.length ?
+            (
+              <>
+                  <p className='successMsg'>Bravo, passez au niveau suivant</p>
+                  <button className='btnResult success'>Niveau Suivant</button>
+              </>
+            )
+            :
+            (
+              <>
+                  <p className='successMsg'>Bravo, vous êtes un expert</p>
+                  <button className='btnResult gameOver'>Accueil</button>
+              </>
+              
+            )
+          }
+        </div>
+        <div className="percentage">
+          <div className="progressPercent">Réussite: {percentage}%</div>
+          <div className="progressPercent">Note: {score}/{maxQuestions}</div>
+        </div>
+      </Fragment>
+    )
+    :
+    (
+      <Fragment>
+        <div className='stepsBtnContainer'>
+          <p className='successMsg'>Vous avez échoué</p>
+          <button className='btnResult success'>Recommencer</button>
+        </div>
+        <div className="percentage">
+          <div className="progressPercent">Réussite: {percentage}%</div>
+          <div className="progressPercent">Note: {score}/{maxQuestions}</div>
+        </div>
+      </Fragment>
+    )
   return (
     <Fragment>
-      <div className='stepsBtnContainer'>
-        <p className='successMsg'>Bravo, vous êtes un expert</p>
-        <button className='btnResult success'>Niveau Suivant</button>
-      </div>
-      <div className="percentage">
-        <div className="progressPercent">Réussite: 10%</div>
-        <div className="progressPercent">Note: 1/10</div>
-      </div>
+
+      {decision}
 
       <hr />
 
@@ -33,13 +72,23 @@ const QuizOver = forwardRef((props, ref) => {
             </tr>
           </thead>
           <tbody>
-            {asked.map(({id, question, answer}) => (
-              <tr key={id}>
-                <td>{ question }</td>
-                <td>{ answer }</td>
-                <td><button className='btnInfo'>Info</button></td>
-              </tr>
-            ))}
+            {canPass ? asked.map(({id, question, answer}) => (
+                <tr key={id}>
+                  <td>{ question }</td>
+                  <td>{ answer }</td>
+                  <td><button className='btnInfo'>Info</button></td>
+                </tr>
+                )
+              )
+              :
+              (
+                <tr>
+                  <td colSpan='3'>
+                    <p style={{color: 'red', textAlign: 'center'}}>Obtenez la moyenne pour y avoir accés</p>
+                  </td>
+                </tr>
+              ) 
+              }
           </tbody>
         </table>
       </div>
