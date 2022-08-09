@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { QuizMarvel } from '../quizMarvel';
 import Levels from '../Levels'
 import ProgressBar from '../ProgressBar';
+import QuizOver from '../QuizOver';
 class Quiz extends Component {
 
     state = {
@@ -16,7 +17,8 @@ class Quiz extends Component {
         idQuestion: 0,
         currentAnswer: '',
         score: 0,
-        showWelcomeMsg: true
+        showWelcomeMsg: true,
+        quizEnd: false
     }
 
     storedDataRef = React.createRef()
@@ -72,8 +74,8 @@ class Quiz extends Component {
     }
 
     nextQuestion = () => {
-        if(this.state.idQuestion > this.state.maxQuestion-1) {
-            // End
+        if(this.state.idQuestion >= this.state.maxQuestion-1) {
+            this.gameOver()
         } else {
             this.setState(prevState => ({
                 idQuestion: prevState.idQuestion + 1
@@ -94,7 +96,7 @@ class Quiz extends Component {
                 draggable: false,
             });
         } else {
-            toast.error(`Félicitations ! +1`, {
+            toast.error(`Raté ! +0`, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -111,8 +113,11 @@ class Quiz extends Component {
         })
     }
 
+    gameOver = () => {
+        this.setState({quizEnd: true})
+    }
+
     render() {
-        // const { pseudo } = this.props.userData;
         const diplayOptions= this.state.options.map((option, index) => {
             return (
                 <p key={index} 
@@ -120,20 +125,34 @@ class Quiz extends Component {
                  onClick={() => this.optionHandle(option)}>{ option }</p>
             )
         });
-        return (
-            <div >
-                <Levels />
-                <ProgressBar />
-                <ToastContainer />
-                <h2>{ this.state.question}</h2>
-                
-                { diplayOptions }
 
-                <button 
-                className='btnSubmit'
-                disabled={this.state.currentAnswer===''}
-                onClick={this.nextQuestion}>Suivant</button>
-            </div>
+        const displayQuiz = this.state.quizEnd ? (
+            <QuizOver />
+        )
+            :
+            (
+                <>
+                    <Levels />
+                    <ProgressBar 
+                        idQuestion={this.state.idQuestion}
+                        maxQuestion={this.state.maxQuestion}
+                    />
+                    <ToastContainer />
+                    <h2>{this.state.question}</h2>
+
+                    {diplayOptions}
+
+                    <button
+                        className='btnSubmit'
+                        disabled={this.state.currentAnswer === ''}
+                        onClick={this.nextQuestion}
+                    >
+                        {this.state.idQuestion === this.state.maxQuestion - 1 ? 'Terminer' : 'Suivant'}
+                    </button>
+                </>
+            );
+        return (
+            displayQuiz
         )
     }
 
