@@ -79,6 +79,7 @@ class Quiz extends Component {
         if (this.props.userData.pseudo) {
             this.showWelcomeMsg(this.props.userData.pseudo);
         }
+
     }
 
     nextQuestion = () => {
@@ -164,7 +165,10 @@ class Quiz extends Component {
             :
             (
                 <>
-                    <Levels />
+                    <Levels 
+                        levelName={this.state.levelName}
+                        quizLevel={this.state.quizLevel}
+                    />
                     <ProgressBar
                         idQuestion={this.state.idQuestion}
                         maxQuestion={this.state.maxQuestion}
