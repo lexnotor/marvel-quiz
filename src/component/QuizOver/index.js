@@ -30,7 +30,7 @@ const QuizOver = forwardRef((props, ref) => {
   const showModalInfo = heroId => {
     console.log(heroId);
     const marvelLink = `https://gateway.marvel.com/v1/public/characters/${heroId}`;
-    const params = '?ts=1&apikey=1631ff75918db706341230c2cba6fb98&hash=f493d23adca6ca064d95ac10682b770e';
+    const params = `?ts=1&apikey=${process.env.REACT_APP_MARVEL_APIKEY}&hash=${process.env.REACT_APP_MARVEL_HASH}`;
 
     if(localStorage.getItem(heroId)) {
       setHeroInfo(JSON.parse(localStorage.getItem(heroId)));
@@ -40,7 +40,7 @@ const QuizOver = forwardRef((props, ref) => {
     fetch(marvelLink + params)
       .then(response => response.json())
       .then(data => {
-        setHeroInfo({ ...data.data.results[0], attributionText: data.data.attributionText });
+        setHeroInfo({ ...data.data.results[0], attributionText: data.attributionText });
         localStorage.setItem(heroId, JSON.stringify(data.data.results[0]));
         if (!localStorage.getItem('marvelLocalDate')) {
           localStorage.setItem('marvelLocalDate', Date.now());
@@ -96,7 +96,34 @@ const QuizOver = forwardRef((props, ref) => {
               <h2>{heroInfo.name}</h2>
             </div>
             <div className='modalBody'>
-              <h3>Contenu</h3>
+              <div className="comicImage">
+                <img 
+                  src={heroInfo.thumbnail.path + '.' + heroInfo.thumbnail.extension}
+                  alt={heroInfo.name}
+                />
+                <p> { heroInfo.attributionText } </p>
+              </div>
+              <div className="comicDetails">
+                <h3> Description </h3>
+                <p>
+                  {
+                    heroInfo.description ?
+                      heroInfo.description :
+                      'Description non disponible ...'
+                  }
+                </p> 
+                <h3> Plus d'info </h3>
+                {
+                  heroInfo.urls &&
+                  heroInfo.urls.map((url, index) => {
+                    return <a 
+                    href={url.url} 
+                    key={index}
+                    target='_blank'
+                    rel='noopener noreferrer' > {url.type} </a>
+                  })
+                }
+              </div>
             </div>
             <div className='modalFooter'>
               <button className='modalBtn'

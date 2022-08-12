@@ -10,12 +10,12 @@ import { Component } from 'react';
 // Your web app's Firebase configuration
 
 const config = {
-    apiKey: "AIzaSyAT9rup07gfq3_wFVwQrIS-eRPzIIaLjB4",
-    authDomain: "marvel-quiz-b4c1c.firebaseapp.com",
-    projectId: "marvel-quiz-b4c1c",
-    storageBucket: "marvel-quiz-b4c1c.appspot.com",
-    messagingSenderId: "940096428643",
-    appId: "1:940096428643:web:5d21d40dd7f932bf7fb656"
+    apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAINE,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECTID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGEBUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGINGSENDERID,
+    appId: process.env.REACT_APP_FIREBASE_APPID
 };
 
 class Firebase extends Component {
