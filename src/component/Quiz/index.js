@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { FaChevronRight } from 'react-icons/fa'
+import { IconContext } from 'react-icons';
 import { QuizMarvel } from '../quizMarvel';
 import Levels from '../Levels'
 import ProgressBar from '../ProgressBar';
@@ -147,7 +149,7 @@ class Quiz extends Component {
             return (
                 <p key={index}
                     className={`answerOptions ${this.state.currentAnswer === option ? 'selected' : null}`}
-                    onClick={() => this.optionHandle(option)}>{option}</p>
+                    onClick={() => this.optionHandle(option)}> <FaChevronRight /> {option}</p>
             )
         });
 
@@ -164,7 +166,7 @@ class Quiz extends Component {
         )
             :
             (
-                <>
+                <IconContext.Provider value={{ style: { verticalAlign: 'middle' } }}>
                     <Levels 
                         levelName={this.state.levelName}
                         quizLevel={this.state.quizLevel}
@@ -185,7 +187,7 @@ class Quiz extends Component {
                     >
                         {this.state.idQuestion === this.state.maxQuestion - 1 ? 'Terminer' : 'Suivant'}
                     </button>
-                </>
+                </IconContext.Provider>
             );
         return (
             displayQuiz

@@ -1,16 +1,58 @@
 import React, { forwardRef, Fragment, useEffect, useState } from 'react'
+import { FaTrophy } from 'react-icons/fa'
+import { IconContext } from 'react-icons';
+import ModalInfo from '../ModalInfo';
 
 const QuizOver = forwardRef((props, ref) => {
 
   const { percentage, levelQuiz, levelName, maxQuestions, score, loadLevelQuestion } = props;
 
   const [asked, setAsked] = useState([]);
+  const [canShowModal, setCanShowModal] = useState(false);
+  const [heroInfo, setHeroInfo] = useState([]);
 
   const canPass = percentage >= 50;
 
   useEffect(() => {
     setAsked(ref.current)
+
+    if (localStorage.getItem('marvelLocalDate')) {
+      const [oldTime, actu] = [localStorage.getItem('marvelLocalDate'), Date.now()];
+      const difference = (actu - oldTime) / ( 1000 * 3600 * 24 );
+      if(difference >= 15) {
+        localStorage.clear();
+        localStorage.setItem('marvelLocalDate', Date.now());
+      }
+    }
+
   }, [ref])
+
+  const showModalInfo = heroId => {
+    console.log(heroId);
+    const marvelLink = `https://gateway.marvel.com/v1/public/characters/${heroId}`;
+    const params = '?ts=1&apikey=1631ff75918db706341230c2cba6fb98&hash=f493d23adca6ca064d95ac10682b770e';
+
+    if(localStorage.getItem(heroId)) {
+      setHeroInfo(JSON.parse(localStorage.getItem(heroId)));
+      setCanShowModal(true)
+    }
+
+    fetch(marvelLink + params)
+      .then(response => response.json())
+      .then(data => {
+        setHeroInfo({ ...data.data.results[0], attributionText: data.data.attributionText });
+        localStorage.setItem(heroId, JSON.stringify(data.data.results[0]));
+        if (!localStorage.getItem('marvelLocalDate')) {
+          localStorage.setItem('marvelLocalDate', Date.now());
+        }
+      })
+      .then(() => setCanShowModal(true))
+      .catch()
+  }
+
+  const hideModalInfo = () => {
+    setCanShowModal(false);
+  }
 
   const decision = canPass ? 
     (
@@ -31,15 +73,15 @@ const QuizOver = forwardRef((props, ref) => {
             )
             :
             (
-              <>
-                  <p className='successMsg'>Bravo, vous êtes un expert</p>
+                <IconContext.Provider value={{ style: { fontSize: '5em', verticalAlign: 'middle' } }}>
+                  <p className='successMsg'> <FaTrophy /> Bravo, vous êtes un expert</p>
                   <button 
                     className='btnResult gameOver'
                     onClick={() => loadLevelQuestion(0)}
                   >
                     Accueil
                   </button>
-              </>
+                </IconContext.Provider>
               
             )
           }
@@ -48,6 +90,21 @@ const QuizOver = forwardRef((props, ref) => {
           <div className="progressPercent">Réussite: {percentage}%</div>
           <div className="progressPercent">Note: {score}/{maxQuestions}</div>
         </div>
+        {canShowModal &&
+          <ModalInfo>
+            <div className='modalHeader'>
+              <h2>{heroInfo.name}</h2>
+            </div>
+            <div className='modalBody'>
+              <h3>Contenu</h3>
+            </div>
+            <div className='modalFooter'>
+              <button className='modalBtn'
+                onClick={hideModalInfo}
+                >Fermer</button>
+            </div>
+          </ModalInfo>
+        }
       </Fragment>
     )
     :
@@ -87,11 +144,14 @@ const QuizOver = forwardRef((props, ref) => {
             </tr>
           </thead>
           <tbody>
-            {canPass ? asked.map(({id, question, answer}) => (
+            {canPass ? asked.map(({id, question, answer, heroId}) => (
                 <tr key={id}>
                   <td>{ question }</td>
                   <td>{ answer }</td>
-                  <td><button className='btnInfo'>Info</button></td>
+                  <td><button 
+                      className='btnInfo'
+                      onClick={() => showModalInfo(heroId)}
+                    >Info</button></td>
                 </tr>
                 )
               )
